@@ -78,23 +78,19 @@ fn round_dec(block: u32, roundkey: u32) -> u32 {
 
 fn enc(block: u32, masterkey: u32, rounds: i32) -> u32 {
     let roundkeys = generate_round_keys(masterkey, rounds);
-    let mut state = block;
     (0..rounds)
-        .for_each(|i| {
-            state = round_enc(state, roundkeys[i as usize]);
-        });
-    state
+        .fold(block, |state, i| {
+            round_enc(state, roundkeys[i as usize])
+        })
 }
 
 fn dec(block: u32, masterkey: u32, rounds: i32) -> u32 {
     let roundkeys = generate_round_keys(masterkey, rounds);
-    let mut state = block;
     (0..rounds)
         .rev()
-        .for_each(|i| {
-            state = round_dec(state, roundkeys[i as usize]);
-        });
-    state
+        .fold(block, |state, i| {
+            round_dec(state, roundkeys[i as usize])
+        })
 }
 
 fn main() {
