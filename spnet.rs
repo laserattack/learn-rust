@@ -55,8 +55,7 @@ fn do_s_block(mut bytes: u32, s_block: &[u32]) -> u32 {
 fn do_p_block(mut bytes: u32, p_block: &[u32]) -> u32 {
     (0..32)
         .fold(0, |mut res, i| {
-            let bit = bytes & 0b1;
-            res |= bit << p_block[i];
+            res |= (bytes & 0b1) << p_block[i];
             bytes >>= 1;
             res
         })
