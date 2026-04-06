@@ -38,7 +38,7 @@ fn generate_round_keys(masterkey: u32, rounds: i32) -> Vec<u32> {
     (0..rounds)
         .map(|i| {
             let shifted = right_cycleshift(masterkey, i as u32);
-            shifted ^ ((i as u32).wrapping_mul(0xDEADBABE))
+            shifted ^ ((i as u32).wrapping_mul(0x9E3779B9))
         })
         .collect()
 }
