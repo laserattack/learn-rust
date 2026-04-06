@@ -99,5 +99,5 @@ fn main() {
     let rounds    = 10;
     let mut state = enc(block, masterkey, rounds);
     state = dec(state, masterkey, rounds);
-    println!("block = {}, state = {}", block, state);
+    println!("block = {}, state = {}", block, state); // block = 555, state = 555
 }
