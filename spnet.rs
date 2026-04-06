@@ -92,7 +92,7 @@ fn dec(block: u32, masterkey: u32, rounds: i32) -> u32 {
 
 fn main() {
     let block     = 555;
-    let masterkey = 0xDEADBEEF;
+    let masterkey = 0xDEADBABE;
     let rounds    = 10;
     let mut state = enc(block, masterkey, rounds);
     state = dec(state, masterkey, rounds);
