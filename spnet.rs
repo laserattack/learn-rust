@@ -44,24 +44,22 @@ fn generate_round_keys(masterkey: u32, rounds: i32) -> Vec<u32> {
 }
 
 fn do_s_block(mut bytes: u32, s_block: &[u32]) -> u32 {
-    let mut res = 0;
     (0..8)
-        .for_each(|i| {
-            res   |= s_block[(bytes & 0xF) as usize] << (i * 4);
+        .fold(0, |mut res, i| {
+            res |= s_block[(bytes & 0xF) as usize] << (i * 4);
             bytes >>= 4;
-        });
-    res
+            res
+        })
 }
 
 fn do_p_block(mut bytes: u32, p_block: &[u32]) -> u32 {
-    let mut res = 0;
     (0..32)
-        .for_each(|i| {
+        .fold(0, |mut res, i| {
             let bit = bytes & 0b1;
-            res     |= bit << p_block[i];
-            bytes   >>= 1;
-        });
-    res
+            res |= bit << p_block[i];
+            bytes >>= 1;
+            res
+        })
 }
 
 fn round_enc(block: u32, roundkey: u32) -> u32 {
