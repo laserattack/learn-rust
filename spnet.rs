@@ -27,17 +27,10 @@ const P_BLOCK_REVERSE: [u32; 32] = [
     18, 31, 11, 21, 6 , 4 , 26, 14,
 ];
 
-fn right_cycleshift(num: u32, shiftval: u32) -> u32 {
-    match shiftval % 32 {
-        0     => num,
-        shift => (num >> shift) | (num << (32 - shift))
-    }
-}
-
 fn generate_round_keys(masterkey: u32, rounds: i32) -> Vec<u32> {
     (0..rounds)
         .map(|i| {
-            let shifted = right_cycleshift(masterkey, i as u32);
+            let shifted = masterkey.rotate_right(i as u32);
             shifted ^ ((i as u32).wrapping_mul(0x9E3779B9))
         })
         .collect()
@@ -74,20 +67,28 @@ fn round_dec(block: u32, roundkey: u32) -> u32 {
 }
 
 fn enc(block: u32, masterkey: u32, rounds: i32) -> u32 {
+    let mut state = block.reverse_bits();
+
     let roundkeys = generate_round_keys(masterkey, rounds);
     (0..rounds)
-        .fold(block, |state, i| {
-            round_enc(state, roundkeys[i as usize])
-        })
+        .for_each(|i| {
+            state = round_enc(state, roundkeys[i as usize]);
+        });
+
+    state.reverse_bits()
 }
 
 fn dec(block: u32, masterkey: u32, rounds: i32) -> u32 {
+    let mut state = block.reverse_bits();
+
     let roundkeys = generate_round_keys(masterkey, rounds);
     (0..rounds)
         .rev()
-        .fold(block, |state, i| {
-            round_dec(state, roundkeys[i as usize])
-        })
+        .for_each(|i| {
+            state = round_dec(state, roundkeys[i as usize]);
+        });
+
+    state.reverse_bits()
 }
 
 fn main() {
