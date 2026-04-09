@@ -12,7 +12,7 @@ fn main() {
     }
 
     // file:///home/serr/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/share/doc/rust/html/std/boxed/struct.Box.html#method.write
-    // Оптимизатор может исключить это копирование, так что предыдущий код (цикл) будет писать прямо в кучу.
+    // Оптимизатор !МОЖЕТ! (не обязан) исключить это копирование, так что предыдущий код (цикл) будет писать прямо в кучу
     let big_box = Box::write(big_box, array);
 
     for (i, x) in big_box.iter().enumerate() {
